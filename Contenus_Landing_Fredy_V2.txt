@@ -1,0 +1,85 @@
+Contenus_Landing_Fredy_V2.txt
+PROJET : Landing Page "Salvar al Concejal Fredy" LANGUE : Espagnol (Équateur) TON : Éditorial, Épique, Solidaire.
+
+1. SECTION : HERO (A/B TESTING)
+
+L'architecture doit permettre de switcher entre ces deux versions pour tester la conversion. 
+
+[VARIANTE A - L'INSTITUTIONNEL]
+
+H1 (Titre) : Fredy Vásquez: Una vida dedicada a Cuenca, una ciudad unida por su vida.
+
+Sub-headline : Honremos el compromiso de quien siempre trabajó por nosotros. Es momento de devolverle la esperanza.
+
+
+CTA Button : Hacer una promesa de donación. 
+
+[VARIANTE B - L'URGENCE HUMAINE]
+
+H1 (Titre) : Fredy nos necesita hoy. 1$ puede cambiar el destino de un guerrero de Cuenca.
+
+Sub-headline : No es el monto, es la unión. Únete a la cadena de solidaridad para que Fredy vuelva a casa.
+
+
+CTA Button : Quiero ayudar a Fredy ahora. 
+
+2. SECTION : LE MANIFESTE (L'ÂME)
+
+Texte à placer selon une grille brisée (Broken Grid) pour un impact éditorial. 
+
+Titre de section : El Camino hacia la Recuperación.
+
+Corps de texte : "Fredy Vásquez, nuestro concejal y amigo, se encuentra en una situación crítica de salud. Tras superar la etapa más dura en cuidados intensivos, ahora comienza su verdadera lucha: un largo camino de recuperación y terapias especializadas. Cuenca no deja a los suyos atrás. Tu apoyo, desde tan solo 1$, garantiza que Fredy reciba el tratamiento de larga duración y el acompañamiento médico necesario para que su voz vuelva a escucharse en nuestras calles. Ayúdanos a cuidar de quien siempre cuidó de nuestra ciudad." 
+
+
+3. SECTION : LE FORMULAIRE (LOGIQUE UX)
+
+Utilisation du 4px/8px grid pour l'espacement des champs. 
+
+Titre du formulaire : Tu promesa de esperanza.
+
+Labels des champs :
+
+Nombre* 
+
+Apellido* 
+
+Correo electrónico (Opcional, obligatorio para noticias por email).
+
+Teléfono WhatsApp (Opcional, obligatorio para noticias por WhatsApp).
+
+Monto de la promesa ($).
+
+Mensaje de aliento (Para el Libro de Oro). 
+
+Checkboxes (Options) :
+
+Quiero recibir noticias sobre la salud de Fredy por email.
+
+Quiero recibir los datos de la cuenta bancaria por email.
+
+Quiero recibir noticias sobre la salud de Fredy por WhatsApp.
+
+Quiero recibir los datos de la cuenta bancaria por WhatsApp.
+
+4. SECTION : LIVRE D'OR (BENTO GRID)
+
+Section dynamique affichant les messages de soutien. 
+
+Titre de section : Voces de Aliento.
+
+Texte de remplacement (Placeholder) : "Gracias Fredy, Cuenca está contigo." — Ana G.
+
+🎨 Rappel des Constantes Design (Pour TechBoss & Anty)
+
+Système de couleur : OKLCH exclusivement. 
+
+
+Surface : lch(97% 0.01 90) (Clarté et espoir). 
+
+
+
+Accent : lch(60% 0.15 40) (Orange P3 - Visibilité maximale). 
+
+
+Typographie : Fraunces (Headings) / Inter (Body).
