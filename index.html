@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salvar al Concejal Fredy - Una Causa de Cuenca</title>
+    <title>Unidos por la vida de Fredy - Una Causa de Cuenca</title>
     <meta name="description"
         content="Únete a la cadena de solidaridad para que Fredy Vásquez vuelva a casa. Tu promesa de esperanza cuenta.">
 
@@ -196,7 +196,7 @@
                     </h2>
                     <div class="prose prose-lg text-gray-600 leading-relaxed font-sans">
                         <p>
-                            <span class="font-bold text-accent">Fredy Vásquez</span>, nuestro concejal y amigo, se
+                            <span class="font-bold text-accent">Fredy Vásquez</span>, nuestro gran amigo, se
                             encuentra en una situación crítica de salud.
                             Tras superar la etapa más dura en cuidados intensivos, ahora comienza su verdadera lucha:
                             un largo camino de recuperación y terapias especializadas.
@@ -277,18 +277,19 @@
                         </div>
 
                         <!-- Contact Preference -->
+                        <!-- Contact Preference -->
                         <div class="space-y-3 p-4 bg-white/50 rounded-lg border border-gray-200">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Método de contacto principal
-                                *</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Métodos de contacto
+                                autorizados *</label>
                             <div class="flex flex-col sm:flex-row gap-4">
                                 <label class="inline-flex items-center cursor-pointer">
-                                    <input type="radio" name="contact_method" value="email"
-                                        class="form-radio text-accent focus:ring-accent h-5 w-5" checked>
+                                    <input type="checkbox" name="opt_in_email" id="opt_in_email"
+                                        class="form-checkbox text-accent focus:ring-accent h-5 w-5">
                                     <span class="ml-2 text-gray-800">Email</span>
                                 </label>
                                 <label class="inline-flex items-center cursor-pointer">
-                                    <input type="radio" name="contact_method" value="whatsapp"
-                                        class="form-radio text-accent focus:ring-accent h-5 w-5">
+                                    <input type="checkbox" name="opt_in_whatsapp" id="opt_in_whatsapp"
+                                        class="form-checkbox text-accent focus:ring-accent h-5 w-5">
                                     <span class="ml-2 text-gray-800">WhatsApp</span>
                                 </label>
                             </div>
@@ -382,29 +383,19 @@
         </section>
 
         <!-- BENTO GRID VOCES -->
+        <!-- BENTO GRID GUESTBOOK (Livre d'or) -->
         <section class="py-20 px-4 md:px-8 max-w-7xl mx-auto">
             <h2 class="font-serif text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900">
-                Voces de Aliento
+                Libro de Visitas
             </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Card 1 -->
-                <div
-                    class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
-                    <p class="italic text-gray-600 mb-4">"Gracias Fredy, Cuenca está contigo en este momento difícil."
-                    </p>
-                    <div class="font-bold text-accent text-sm">— Ana G.</div>
-                </div>
-                <!-- Card 2 -->
-                <div class="bg-accent/5 p-6 rounded-xl shadow-sm border border-accent/10">
-                    <p class="italic text-gray-800 mb-4 font-medium">"Tu labor no se olvida. ¡Fuerza guerrero!"</p>
-                    <div class="font-bold text-accent text-sm">— Carlos M.</div>
-                </div>
-                <!-- Card 3 -->
-                <div
-                    class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
-                    <p class="italic text-gray-600 mb-4">"Estamos orando por tu pronta recuperación."</p>
-                    <div class="font-bold text-accent text-sm">— Familia Torres</div>
-                </div>
+            <div id="guestbook-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Javascript will populate this -->
+            </div>
+            <div class="mt-12 text-center">
+                <button id="loadMoreBtn"
+                    class="hidden px-6 py-2 bg-white border border-gray-300 rounded-full text-gray-600 hover:bg-gray-50 transition-colors shadow-sm font-medium">
+                    Ver más mensajes
+                </button>
             </div>
         </section>
 
@@ -432,51 +423,100 @@
                 variantInput.value = window.ab_variant || 'A';
             }
 
-            // 2. Form Logic (Contact Method Switcher)
-            const radioButtons = document.querySelectorAll('input[name="contact_method"]');
+            // 2. Form Logic (Dynamic Requirements) & Guestbook
+
+            // --- GUESTBOOK LOGIC ---
+            const grid = document.getElementById('guestbook-grid');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            let gbOffset = 0;
+            const gbLimit = 12;
+
+            async function loadGuestbook() {
+                if (!grid) return;
+                try {
+                    const url = `https://cms.iaya.cloud/items/livre_or?filter[is_approved][_eq]=true&sort=-date_created&limit=${gbLimit}&offset=${gbOffset}`;
+                    const res = await fetch(url);
+                    const json = await res.json();
+                    const items = json.data;
+
+                    if (items && items.length > 0) {
+                        items.forEach(item => {
+                            const card = document.createElement('div');
+                            card.className = "bg-white p-6 rounded-xl shadow-sm border border-stone-100 break-inside-avoid hover:shadow-md transition-shadow flex flex-col justify-between";
+                            card.innerHTML = `
+                                <p class="italic text-gray-600 mb-4 text-sm leading-relaxed">"${item.mensaje}"</p>
+                                <div class="font-bold text-accent text-xs uppercase tracking-wide">— ${item.nombre} ${item.apellido_initial || ''}</div>
+                            `;
+                            grid.appendChild(card);
+                        });
+                        gbOffset += items.length;
+
+                        if (items.length < gbLimit) {
+                            loadMoreBtn.classList.add('hidden');
+                        } else {
+                            loadMoreBtn.classList.remove('hidden');
+                        }
+                    } else {
+                        loadMoreBtn.classList.add('hidden');
+                    }
+                } catch (e) {
+                    console.error("Guestbook load error", e);
+                    loadMoreBtn.classList.add('hidden');
+                }
+            }
+
+            if (grid) {
+                loadGuestbook();
+                if (loadMoreBtn) loadMoreBtn.addEventListener('click', loadGuestbook);
+            }
+
+            // --- FORM VALIDATION LOGIC ---
+            const optInEmail = document.getElementById('opt_in_email');
+            const optInWhatsapp = document.getElementById('opt_in_whatsapp');
+
             const emailInput = document.getElementById('email');
             const whatsappInput = document.getElementById('whatsapp');
             const emailContainer = document.getElementById('emailContainer');
             const whatsappContainer = document.getElementById('whatsappContainer');
 
-            function updateRequirements(method) {
-                if (method === 'email') {
+            function updateRequirements() {
+                // Email Rule
+                if (optInEmail && optInEmail.checked) {
                     emailInput.required = true;
-                    whatsappInput.required = false;
-
                     emailContainer.classList.remove('opacity-50');
                     emailContainer.querySelector('.logic-indicator').textContent = '(Requerido)';
                     emailContainer.querySelector('.logic-indicator').classList.add('text-accent');
                     emailContainer.querySelector('.logic-indicator').classList.remove('text-gray-400');
-
-                    whatsappContainer.classList.add('opacity-50');
-                    whatsappContainer.querySelector('.logic-indicator').textContent = '(Opcional)';
-                    whatsappContainer.querySelector('.logic-indicator').classList.remove('text-accent');
-                    whatsappContainer.querySelector('.logic-indicator').classList.add('text-gray-400');
                 } else {
                     emailInput.required = false;
-                    whatsappInput.required = true;
-
-                    whatsappContainer.classList.remove('opacity-50');
-                    whatsappContainer.querySelector('.logic-indicator').textContent = '(Requerido)';
-                    whatsappContainer.querySelector('.logic-indicator').classList.add('text-accent');
-                    whatsappContainer.querySelector('.logic-indicator').classList.remove('text-gray-400');
-
                     emailContainer.classList.add('opacity-50');
                     emailContainer.querySelector('.logic-indicator').textContent = '(Opcional)';
                     emailContainer.querySelector('.logic-indicator').classList.remove('text-accent');
                     emailContainer.querySelector('.logic-indicator').classList.add('text-gray-400');
                 }
+
+                // Whatsapp Rule
+                if (optInWhatsapp && optInWhatsapp.checked) {
+                    whatsappInput.required = true;
+                    whatsappContainer.classList.remove('opacity-50');
+                    whatsappContainer.querySelector('.logic-indicator').textContent = '(Requerido)';
+                    whatsappContainer.querySelector('.logic-indicator').classList.add('text-accent');
+                    whatsappContainer.querySelector('.logic-indicator').classList.remove('text-gray-400');
+                } else {
+                    whatsappInput.required = false;
+                    whatsappContainer.classList.add('opacity-50');
+                    whatsappContainer.querySelector('.logic-indicator').textContent = '(Opcional)';
+                    whatsappContainer.querySelector('.logic-indicator').classList.remove('text-accent');
+                    whatsappContainer.querySelector('.logic-indicator').classList.add('text-gray-400');
+                }
             }
 
-            radioButtons.forEach(radio => {
-                radio.addEventListener('change', (e) => {
-                    updateRequirements(e.target.value);
-                });
-            });
-
-            // Initialize default state (Email is checked by default in HTML)
-            updateRequirements('email');
+            if (optInEmail && optInWhatsapp) {
+                optInEmail.addEventListener('change', updateRequirements);
+                optInWhatsapp.addEventListener('change', updateRequirements);
+                // Initialize state
+                updateRequirements();
+            }
 
 
             // 3. Form Submission
