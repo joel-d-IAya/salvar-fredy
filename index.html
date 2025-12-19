@@ -8,6 +8,8 @@
     <meta name="description"
         content="Únete a la cadena de solidaridad para que Fredy Vásquez vuelva a casa. Tu promesa de esperanza cuenta.">
 
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -208,6 +210,25 @@
                         <p class="italic text-lg border-l-4 border-accent pl-4 py-2 bg-white/50">
                             "Ayúdanos a cuidar de quien siempre cuidó de nuestra ciudad."
                         </p>
+
+                        <!-- Banking Section -->
+                        <div class="mt-8 bg-white/90 rounded-xl shadow-lg border-2 border-accent/10 p-6 md:p-8">
+                            <h3 class="font-serif font-bold text-2xl text-gray-900 mb-3 text-center md:text-left">
+                                Cada gesto cuenta: Tu apoyo, pequeño o grande, hace la diferencia
+                            </h3>
+                            <p class="text-gray-700 mb-6 text-lg">
+                                Puedes realizar tu donación directamente a nuestra cuenta bancaria:
+                            </p>
+                            <div class="bg-surface border border-accent/20 rounded-xl p-6 shadow-inner">
+                                <strong class="block text-accent text-xl mb-2 font-bold tracking-wide">BANCO DEL
+                                    AUSTRO</strong>
+                                <div class="text-gray-800 space-y-1 font-medium text-lg">
+                                    <div>CUENTA DE AHORROS: <span class="font-bold select-all">0014647996</span></div>
+                                    <div>TITULAR: <span class="font-bold">MONTANO PELAEZ MARIA FERNANDA</span></div>
+                                    <div>C.I: <span class="font-bold">0104390059</span></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -503,10 +524,8 @@
                 // Schema says "string (conditionally required)". Assuming empty string is fine if not required.
 
                 try {
-                    // MOCK WEBHOOK URL (Change to actual URL provided by user or placeholder)
-                    const WEBHOOK_URL = 'https://n8nflow.iaya.cloud/webhook-test/donacion-fredy';
-                    // Since I don't have a real URL, this fetch will fail in a real browser unless I mock it.
-                    // For the code deliverable, I put the placeholder.
+                    // PRODUCTION WEBHOOK URL
+                    const WEBHOOK_URL = 'https://n8nflow.iaya.cloud/webhook/donacion-fredy';
 
                     // console.log("Sending Payload:", payload);
 
@@ -535,8 +554,7 @@
                     // The user asked to "Code" it, usually implies correct logic even if endpoint fails.
                     // I will show the error message.
                     errorMessage.classList.remove('hidden');
-                    document.getElementById('errorText').innerText = "Simulated Error (Invalid Webhook URL). Payload logged to console.";
-                    console.log("Simulated Payload:", payload);
+                    console.error("Submission failed.", payload);
                 } finally {
                     // Reset Loading State
                     submitBtn.disabled = false;
