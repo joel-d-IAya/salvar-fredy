@@ -296,7 +296,7 @@
                                 ($)</label>
                             <div class="relative">
                                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">$</span>
-                                <input type="number" id="amount" name="pledge_amount" min="1" step="any"
+                                <input type="number" id="amount" name="pledge_amount" min="0" step="any"
                                     class="w-full pl-8 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-colors bg-white font-mono text-lg"
                                     placeholder="1.00" value="1.00">
                             </div>
@@ -645,7 +645,7 @@
                     full_name: `${formData.get('first_name')} ${formData.get('last_name')}`.trim(),
                     email: formData.get('email') || "",
                     whatsapp: formData.get('whatsapp') || "",
-                    pledge_amount: parseFloat(formData.get('pledge_amount') || "1"),
+                    pledge_amount: parseFloat(formData.get('pledge_amount') || "0"),
                     message: formData.get('message') || "",
                     variant_id: formData.get('variant_id'),
                     timestamp: new Date().toISOString(),
