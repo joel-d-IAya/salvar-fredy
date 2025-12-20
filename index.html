@@ -439,13 +439,24 @@
                     const json = await res.json();
                     const items = json.data;
 
+                    // Name Formatter for Latin American Names (Privacy)
+                    const formatName = (str) => {
+                        if (!str) return 'Anónimo';
+                        const parts = str.trim().split(/\s+/);
+                        if (parts.length <= 1) return parts[0];
+                        if (parts.length === 2) return `${parts[0]} ${parts[1].charAt(0)}.`;
+                        // > 2 words: First 2 full, rest initials
+                        return `${parts[0]} ${parts[1]} ${parts.slice(2).map(p => p.charAt(0) + '.').join(' ')}`;
+                    };
+
                     if (items && items.length > 0) {
                         items.forEach(item => {
                             const card = document.createElement('div');
                             card.className = "bg-white p-6 rounded-xl shadow-sm border border-stone-100 break-inside-avoid hover:shadow-md transition-shadow flex flex-col justify-between";
+                            const displayName = formatName(item.nom);
                             card.innerHTML = `
                                 <p class="italic text-gray-600 mb-4 text-sm leading-relaxed">"${item.messsage}"</p>
-                                <div class="font-bold text-accent text-xs uppercase tracking-wide">— ${item.nombre} ${item.apellido_initial || ''}</div>
+                                <div class="font-bold text-accent text-xs uppercase tracking-wide">— ${displayName}</div>
                             `;
                             grid.appendChild(card);
                         });
