@@ -434,7 +434,7 @@
             async function loadGuestbook() {
                 if (!grid) return;
                 try {
-                    const url = `https://cms.iaya.cloud/items/livre_or?filter[approuve][_eq]=true&sort=-date_created&limit=${gbLimit}&offset=${gbOffset}`;
+                    const url = `https://cms.iaya.cloud/items/livre_or?filter[approuve][_eq]=true&sort=-date&limit=${gbLimit}&offset=${gbOffset}`;
                     const res = await fetch(url);
                     const json = await res.json();
                     const items = json.data;
