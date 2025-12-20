@@ -429,15 +429,29 @@
 
     </main>
 
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="font-serif font-bold text-2xl mb-4">#TodosPorFredy</p>
-            <p class="text-gray-400 text-sm">
-                Iniciativa ciudadana solidaria de Cuenca, Ecuador.
-            </p>
-            <p class="text-gray-500 text-xs mt-8">
-                &copy; 2024 - Todos los derechos reservados.
-            </p>
+    <footer style="background-color: oklch(15% 0.01 90);" class="py-12">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col items-center justify-center text-center space-y-8">
+            <!-- Campaign Info -->
+            <div class="space-y-2">
+                <p class="font-serif font-bold text-2xl text-white">#TodosPorFredy</p>
+                <p style="color: oklch(85% 0.01 90); opacity: 0.5;" class="text-sm">
+                    Iniciativa ciudadana solidaria de Cuenca, Ecuador.
+                </p>
+            </div>
+
+            <!-- Agency Signature -->
+            <div class="flex items-center justify-center">
+                <a href="https://iaya.cloud" target="_blank" rel="noopener noreferrer"
+                    class="group flex items-center gap-2 decoration-none transition-opacity hover:opacity-100">
+                    <span
+                        style="font-family: 'Inter', sans-serif; font-size: 12px; color: oklch(85% 0.01 90); opacity: 0.5;">
+                        Hecho con amor y cariño por
+                    </span>
+                    <img src="./assets/IAya-logo.png" alt="IAya Agency"
+                        class="h-6 w-auto filter grayscale brightness-125 transition-all duration-300 group-hover:grayscale-0 group-hover:brightness-100"
+                        loading="lazy" width="90" height="30">
+                </a>
+            </div>
         </div>
     </footer>
 
