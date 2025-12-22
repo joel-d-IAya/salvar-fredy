@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento de Promesas - Fredy</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS (Same config as main site) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        surface: 'oklch(97% 0.01 90)',
+                        accent: 'oklch(60% 0.15 40)',
+                        accentHover: 'oklch(55% 0.15 40)',
+                    },
+                    fontFamily: {
+                        serif: ['Fraunces', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-surface text-gray-800 font-sans min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 py-12">
+        <header class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+            <div>
+                <h1 class="font-serif text-3xl font-bold text-accent">Promesas de Donación</h1>
+                <p class="text-gray-500 text-sm mt-1">Panel de seguimiento para la familia</p>
+            </div>
+
+            <div class="flex gap-3">
+                <a href="index.html"
+                    class="px-4 py-2 text-gray-600 hover:text-accent font-medium text-sm transition-colors">
+                    &larr; Volver al sitio
+                </a>
+                <button onclick="fetchPromesas()"
+                    class="bg-white border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 shadow-sm transition-colors flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Actualizar
+                </button>
+            </div>
+        </header>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="py-4 px-6 font-serif font-bold text-gray-700 uppercase text-xs tracking-wider">
+                                Fecha</th>
+                            <th class="py-4 px-6 font-serif font-bold text-gray-700 uppercase text-xs tracking-wider">
+                                Donante</th>
+                            <th
+                                class="py-4 px-6 font-serif font-bold text-gray-700 uppercase text-xs tracking-wider text-right">
+                                Monto</th>
+                            <th class="py-4 px-6 font-serif font-bold text-gray-700 uppercase text-xs tracking-wider">
+                                Contacto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="promisesTableBody" class="divide-y divide-gray-100">
+                        <tr>
+                            <td colspan="4" class="py-12 text-center text-gray-500">Cargando promesas...</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="bg-gray-50 font-bold text-gray-900">
+                        <tr>
+                            <td colspan="2" class="py-4 px-6 text-right">TOTAL:</td>
+                            <td class="py-4 px-6 text-right font-mono text-accent" id="totalAmount">$0.00</td>
+                            <td class="px-6"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Formatter
+        const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+        const dateFmt = new Intl.DateTimeFormat('es-EC', { dateStyle: 'medium', timeStyle: 'short' });
+
+        async function fetchPromesas() {
+            const tbody = document.getElementById('promisesTableBody');
+            const totalEl = document.getElementById('totalAmount');
+
+            // Set Loading
+            tbody.innerHTML = '<tr><td colspan="4" class="py-12 text-center text-gray-500 animate-pulse">Cargando datos...</td></tr>';
+
+            try {
+                // Fetch from Directus
+                const res = await fetch('https://cms.iaya.cloud/items/promesas?sort=-date_created&limit=200');
+
+                if (!res.ok) throw new Error('Error en la API');
+
+                const json = await res.json();
+                const data = json.data;
+
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="py-12 text-center text-gray-500">No hay promesas registradas aún.</td></tr>';
+                    totalEl.textContent = "$0.00";
+                    return;
+                }
+
+                let total = 0;
+
+                tbody.innerHTML = data.map(item => {
+                    const monto = parseFloat(item.monto || 0);
+                    total += monto;
+
+                    const dateStr = item.date_created ? dateFmt.format(new Date(item.date_created)) : '-';
+
+                    return `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="py-4 px-6 text-sm text-gray-500 whitespace-nowrap">
+                            ${dateStr}
+                        </td>
+                        <td class="py-4 px-6 font-medium text-gray-900">
+                            ${(item.donante || 'Anónimo')}
+                        </td>
+                        <td class="py-4 px-6 font-mono text-accent font-bold text-right whitespace-nowrap">
+                            ${currency.format(monto)}
+                        </td>
+                        <td class="py-4 px-6 text-sm text-gray-600">
+                            ${renderContact(item.contacto)}
+                        </td>
+                    </tr>
+                    `;
+                }).join('');
+
+                totalEl.textContent = currency.format(total);
+
+            } catch (error) {
+                console.error(error);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="py-12 text-center text-red-600 bg-red-50 rounded-lg m-4">
+                            <strong>Error de conexión</strong><br>
+                            <span class="text-sm opacity-75">No se pudieron cargar los datos. Intenta de nuevo.</span>
+                        </td>
+                    </tr>`;
+            }
+        }
+
+        function renderContact(info) {
+            if (!info) return '<span class="text-gray-300 italic">No disponible</span>';
+
+            // Try to detect email or phone to make clickable
+            // If it looks like an email
+            if (info.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                return `<a href="mailto:${info}" class="text-accent hover:underline flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            ${info}
+                        </a>`;
+            }
+
+            // Default styling for plain text / phone
+            return `<span class="select-all font-mono text-slate-700">${info}</span>`;
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', fetchPromesas);
+    </script>
+</body>
+
+</html>
