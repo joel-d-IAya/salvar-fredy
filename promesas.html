@@ -108,7 +108,7 @@
 
             try {
                 // Fetch from Directus
-                const res = await fetch('https://cms.iaya.cloud/items/donaciones?sort=-date_created&limit=200');
+                const res = await fetch('https://cms.iaya.cloud/items/donaciones?sort=donante&limit=200');
 
                 if (!res.ok) throw new Error('Error en la API');
 
